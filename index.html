@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>24-Hour Hackathon Live Monitor</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #0f172a;
+    color: #e5e7eb;
+}
+
+header {
+    background: linear-gradient(90deg, #1e3a8a, #2563eb);
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+    letter-spacing: 1px;
+}
+
+.container {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+}
+
+.left-panel {
+    flex: 2;
+    background: #020617;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.right-panel {
+    flex: 1;
+    background: #020617;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+}
+
+.user-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #1e293b;
+    padding-bottom: 15px;
+}
+
+.user-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #2563eb;
+}
+
+.user-details h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.user-details p {
+    margin: 3px 0;
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.timer {
+    background: #020617;
+    border: 1px solid #2563eb;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.timer h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #38bdf8;
+}
+
+.rules, .submission {
+    margin-bottom: 20px;
+}
+
+.rules h3, .submission h3 {
+    color: #60a5fa;
+    margin-bottom: 10px;
+}
+
+.rules ul {
+    padding-left: 20px;
+}
+
+.rules li {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.submission textarea {
+    width: 100%;
+    height: 120px;
+    border-radius: 8px;
+    border: none;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.submission button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.submission button:hover {
+    background: #1d4ed8;
+}
+
+video {
+    width: 100%;
+    border-radius: 10px;
+    border: 2px solid #2563eb;
+}
+
+.status {
+    margin-top: 10px;
+    color: #22c55e;
+    font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🚀 KLU National 24-Hour Hackathon – LIVE</h1>
+</header>
+
+<div class="container">
+
+    <!-- LEFT SIDE -->
+    <div class="left-panel">
+
+        <!-- USER DETAILS -->
+        <div class="user-card">
+            <img src="image.png" alt="Participant Photo">
+            <div class="user-details">
+                <h3>Krishna Sairam</h3>
+                <p>University ID: KLU2025-78421</p>
+                <p>Status: Actively Participating</p>
+            </div>
+        </div>
+
+        <!-- TIMER -->
+        <div class="timer">
+            <h2 id="countdown">Loading Hackathon Timer...</h2>
+            <p>From 7:45 PM(23-12-2025) to 7:45(24-12-2025) PM Tomorrow</p>
+        </div>
+
+        <!-- RULES -->
+        <div class="rules">
+            <h3>📜 Hackathon Rules</h3>
+            <ul>
+                <li>Hackathon duration is strictly 24 hours.</li>
+                <li>Camera monitoring must remain ON throughout the event.</li>
+                <li>Internet usage is allowed for development & research.</li>
+                <li>No plagiarism or reuse of existing projects.</li>
+                <li>Final submission must be done before the timer ends.</li>
+                <li>Any violation leads to direct disqualification.</li>
+            </ul>
+        </div>
+
+        <!-- SUBMISSION -->
+        <div class="submission">
+            <h3>📤 Project Submission</h3>
+            <textarea placeholder="Paste your GitHub repository link or project description here..."></textarea>
+            <button>Submit Project</button>
+        </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="right-panel">
+        <h3>🎥 Live Camera Monitoring</h3>
+        <video id="video" autoplay muted></video>
+        <div class="status">● Live Feed Active</div>
+    </div>
+
+</div>
+
+<script>
+// CAMERA ACCESS
+navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+.then(stream => {
+    document.getElementById("video").srcObject = stream;
+})
+.catch(err => {
+    alert("Camera access is required for hackathon monitoring.");
+});
+
+// TIMER LOGIC
+function updateTimer() {
+    const now = new Date();
+
+    const start = new Date();
+    start.setHours(19, 45, 0, 0);
+
+    const end = new Date(start);
+    end.setDate(end.getDate() + 1);
+
+    if (now < start) {
+        document.getElementById("countdown").innerText = "Hackathon Not Started Yet";
+        return;
+    }
+
+    const diff = end - now;
+
+    if (diff <= 0) {
+        document.getElementById("countdown").innerText = "Hackathon Completed";
+        return;
+    }
+
+    const hrs = Math.floor(diff / (1000 * 60 * 60));
+    const mins = Math.floor((diff / (1000 * 60)) % 60);
+    const secs = Math.floor((diff / 1000) % 60);
+
+    document.getElementById("countdown").innerText =
+        `${hrs}h ${mins}m ${secs}s Remaining`;
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+</script>
+
+</body>
+</html>
