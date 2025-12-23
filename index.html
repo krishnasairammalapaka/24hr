@@ -181,6 +181,7 @@ video {
                 <li>No plagiarism or reuse of existing projects.</li>
                 <li>Final submission must be done before the timer ends.</li>
                 <li>Any violation leads to direct disqualification.</li>
+                <li>Maintain professional conduct throughout the event.</li>
             </ul>
         </div>
 
@@ -212,28 +213,22 @@ navigator.mediaDevices.getUserMedia({ video: true, audio: false })
     alert("Camera access is required for hackathon monitoring.");
 });
 
-// TIMER LOGIC
+// TIMER LOGIC (updated)
+// Counts down to today's 19:45 (7:45 PM). Shows "Hackathon Completed" after that time.
 function updateTimer() {
     const now = new Date();
 
-    const start = new Date();
-    start.setHours(19, 45, 0, 0);
+    // Target: today at 19:45:00 local time
+    const target = new Date();
+    target.setHours(19, 45, 0, 0);
 
-    const end = new Date(start);
-    end.setDate(end.getDate() + 1);
-
-    if (now < start) {
-        document.getElementById("countdown").innerText = "Hackathon Not Started Yet";
-        return;
-    }
-
-    const diff = end - now;
-
-    if (diff <= 0) {
+    // If it's past today's 19:45, consider the event completed
+    if (now >= target) {
         document.getElementById("countdown").innerText = "Hackathon Completed";
         return;
     }
 
+    const diff = target - now;
     const hrs = Math.floor(diff / (1000 * 60 * 60));
     const mins = Math.floor((diff / (1000 * 60)) % 60);
     const secs = Math.floor((diff / 1000) % 60);
